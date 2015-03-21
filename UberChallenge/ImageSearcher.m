@@ -12,6 +12,7 @@
 
 @interface ImageSearcher()
 @property (nonatomic, strong) NSOperationQueue* queue;
+@property (nonatomic, strong) ArrayParameterBlock completeBlock;
 @end
 
 @implementation ImageSearcher
@@ -33,6 +34,7 @@
         return;
     }
     
+    self.completeBlock = imageUrls;
     NSString *url = [NSString stringWithFormat:@"https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=%@", searchTerm];
     url = [url stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
     //Formulate the string as a URL object.
@@ -41,6 +43,7 @@
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:_queue
                            completionHandler:^(NSURLResponse* response, NSData* data, NSError* connectionError){
+                               
                                [self performSelectorOnMainThread:@selector(fetchedImageData:) withObject:data waitUntilDone:NO];
                            }];
 
@@ -58,6 +61,11 @@
     if (!error && json)
     {
         ImageSearchObject* searchResponseObject = [[ImageSearchObject alloc] initWithDictionary:json];
+        
+        if (_completeBlock)
+        {
+            _completeBlock([searchResponseObject resultImageObjects]);
+        }
     }
 }
 

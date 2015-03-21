@@ -11,5 +11,6 @@
 @interface ImageSearchObject : NSObject
 
 - (id)initWithDictionary:(NSDictionary*)imageSearchResultDictionary;
+- (NSArray*)resultImageObjects;
 
 @end

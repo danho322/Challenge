@@ -11,5 +11,6 @@
 @interface ImageResultObject : NSObject
 
 - (id)initWithResultDictionary:(NSDictionary*)resultDictionary;
+- (NSString*)imageResultUrl;
 
 @end
